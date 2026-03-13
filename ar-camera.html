@@ -5,228 +5,190 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
   <title>AR Camera — Champagne & Territoire</title>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.4.2/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <!--
+    ✅ VERSIONI TESTATE E COMPATIBILI SU GITHUB PAGES (HTTPS):
+       A-Frame 1.3.0 + AR.js 3.4.5 via unpkg
+  -->
+  <script src="https://unpkg.com/aframe@1.3.0/dist/aframe-master.min.js"></script>
+  <script src="https://unpkg.com/@ar-js-org/ar.js@3.4.5/aframe/build/aframe-ar.js"></script>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow: hidden; font-family: Georgia, serif; background: #000; }
 
-    body { overflow: hidden; font-family: Georgia, serif; }
-
-    /* ── Overlay UI ── */
     #ui-overlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 100;
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 999;
     }
 
-    /* Top bar */
     #top-bar {
-      position: absolute;
-      top: 0; left: 0; right: 0;
+      position: absolute; top: 0; left: 0; right: 0;
       padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent);
     }
-
-    #top-bar h1 {
-      font-size: 1rem;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      color: #f5f0e8;
-    }
-
+    #top-bar h1 { font-size: 1rem; font-weight: 400; letter-spacing: 0.1em; color: #f5f0e8; }
     #top-bar h1 em { color: #d4a017; font-style: italic; }
-
     #back-btn {
-      pointer-events: all;
-      text-decoration: none;
-      color: #d4a017;
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      border: 1px solid rgba(184,134,11,0.4);
-      padding: 0.4rem 0.9rem;
-      background: rgba(0,0,0,0.5);
-      transition: all 0.2s;
+      pointer-events: all; text-decoration: none; color: #d4a017;
+      font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+      border: 1px solid rgba(184,134,11,0.5); padding: 0.4rem 0.9rem;
+      background: rgba(0,0,0,0.6);
     }
-    #back-btn:hover { background: rgba(184,134,11,0.15); }
 
-    /* Bottom info bar */
+    #status-badge {
+      position: absolute; top: 72px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.65); border: 1px solid rgba(184,134,11,0.3);
+      color: #d4a017; font-size: 0.72rem; letter-spacing: 0.15em;
+      text-transform: uppercase; padding: 0.35rem 1rem; white-space: nowrap;
+    }
+
+    #crosshair {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); width: 64px; height: 64px;
+    }
+    .corner {
+      position: absolute; width: 18px; height: 18px;
+      border-color: rgba(212,160,23,0.65); border-style: solid;
+    }
+    .corner.tl { top:0; left:0; border-width:2px 0 0 2px; }
+    .corner.tr { top:0; right:0; border-width:2px 2px 0 0; }
+    .corner.bl { bottom:0; left:0; border-width:0 0 2px 2px; }
+    .corner.br { bottom:0; right:0; border-width:0 2px 2px 0; }
+
     #bottom-bar {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 1.2rem 1.5rem;
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.2rem 1.5rem 2rem;
       background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
     }
-
     .scan-hint {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      color: rgba(245,240,232,0.7);
-      font-size: 0.85rem;
+      display: flex; align-items: center; gap: 0.8rem;
+      color: rgba(245,240,232,0.8); font-size: 0.85rem; margin-bottom: 0.8rem;
     }
-
     .scan-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #d4a017;
+      width: 9px; height: 9px; border-radius: 50%; background: #d4a017; flex-shrink: 0;
       animation: pulse 1.5s ease-in-out infinite;
     }
-
-    .markers-list {
-      display: flex;
-      gap: 0.8rem;
-      margin-top: 0.8rem;
-      flex-wrap: wrap;
-    }
-
+    .markers-list { display: flex; gap: 0.6rem; flex-wrap: wrap; }
     .marker-tag {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(184,134,11,0.7);
-      border: 1px solid rgba(184,134,11,0.25);
-      padding: 0.25rem 0.6rem;
-      background: rgba(0,0,0,0.4);
+      font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(184,134,11,0.8); border: 1px solid rgba(184,134,11,0.3);
+      padding: 0.2rem 0.55rem; background: rgba(0,0,0,0.5);
     }
 
-    /* Center crosshair */
-    #crosshair {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px; height: 60px;
-    }
-
-    #crosshair::before,
-    #crosshair::after {
-      content: '';
-      position: absolute;
-      background: rgba(212,160,23,0.5);
-    }
-
-    /* Corner brackets */
-    .corner {
-      position: absolute;
-      width: 20px; height: 20px;
-      border-color: rgba(212,160,23,0.6);
-      border-style: solid;
-    }
-    .corner.tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
-    .corner.tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
-    .corner.bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
-    .corner.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.8); }
-    }
-
-    /* Instructions modal */
+    /* Istruzioni */
     #instructions {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.9);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
+      position: fixed; inset: 0; background: rgba(5,3,1,0.96);
+      z-index: 1000; display: flex; align-items: center;
+      justify-content: center; padding: 1.5rem;
     }
-
     #instructions.hidden { display: none; }
 
     .instr-box {
-      background: #0f0c06;
-      border: 1px solid rgba(184,134,11,0.4);
-      padding: 2.5rem;
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
+      background: #0f0c06; border: 1px solid rgba(184,134,11,0.4);
+      padding: 2rem; max-width: 420px; width: 100%; text-align: center;
     }
+    .instr-box h2 { font-size: 1.2rem; font-weight: 400; color: #f5f0e8; margin-bottom: 0.3rem; }
+    .instr-box .subtitle { font-size: 0.8rem; color: #7a6a50; margin-bottom: 1.4rem; }
 
-    .instr-box h2 {
-      font-size: 1.3rem;
-      font-weight: 400;
-      color: #f5f0e8;
-      margin-bottom: 0.5rem;
+    .marker-guide { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.4rem; text-align: left; }
+    .mg-row {
+      display: flex; align-items: center; gap: 0.8rem;
+      padding: 0.55rem 0.8rem; border: 1px solid rgba(184,134,11,0.12);
+      background: rgba(184,134,11,0.03);
     }
+    .mg-icon { font-size: 1.3rem; }
+    .mg-name { font-size: 0.82rem; color: #f5f0e8; }
+    .mg-marker { font-size: 0.68rem; color: #b8860b; letter-spacing: 0.08em; }
 
-    .instr-box p {
-      font-size: 0.85rem;
-      color: #7a6a50;
-      line-height: 1.7;
-      margin-bottom: 1.5rem;
+    .tip-box {
+      background: rgba(184,134,11,0.07); border: 1px solid rgba(184,134,11,0.22);
+      padding: 0.8rem 1rem; margin-bottom: 1.4rem;
+      font-size: 0.76rem; color: #a09070; line-height: 1.65; text-align: left;
     }
+    .tip-box strong { color: #d4a017; }
 
-    .instr-steps {
-      list-style: none;
-      text-align: left;
-      margin-bottom: 2rem;
+    .dl-links { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1.2rem; flex-wrap: wrap; }
+    .dl-link {
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #d4a017; border: 1px solid rgba(184,134,11,0.4);
+      padding: 0.3rem 0.7rem; text-decoration: none; background: rgba(0,0,0,0.3);
     }
-
-    .instr-steps li {
-      font-size: 0.85rem;
-      color: #a09070;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(184,134,11,0.1);
-      display: flex;
-      gap: 0.8rem;
-    }
-
-    .instr-steps li span.n {
-      color: #d4a017;
-      font-style: italic;
-      min-width: 1.2rem;
-    }
+    .dl-link:hover { background: rgba(184,134,11,0.1); }
 
     .start-btn {
-      width: 100%;
-      padding: 1rem;
-      background: #b8860b;
-      color: #0a0a0a;
-      border: none;
-      font-family: inherit;
-      font-size: 0.85rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.2s;
+      width: 100%; padding: 1rem; background: #b8860b; color: #0a0a0a;
+      border: none; font-family: inherit; font-size: 0.82rem;
+      letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer;
     }
     .start-btn:hover { background: #d4a017; }
 
-    /* A-Frame canvas */
-    a-scene { position: fixed; inset: 0; }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.4; transform:scale(0.75); }
+    }
   </style>
 </head>
 <body>
 
-<!-- ═══ INSTRUCTIONS MODAL ═══ -->
+<!-- ════ ISTRUZIONI ════ -->
 <div id="instructions">
   <div class="instr-box">
-    <h2>Camera AR pronta</h2>
-    <p>Punta la fotocamera sui marker stampati per vedere i contenuti 3D.</p>
-    <ul class="instr-steps">
-      <li><span class="n">1</span> Stampa i marker dalla pagina principale</li>
-      <li><span class="n">2</span> Tieni il marker su un piano orizzontale</li>
-      <li><span class="n">3</span> Inquadra il marker a circa 30–50 cm</li>
-      <li><span class="n">4</span> Attendi il riconoscimento (1–2 secondi)</li>
-    </ul>
-    <button class="start-btn" onclick="startAR()">▶ Inizia esperienza</button>
+    <h2>📷 Camera AR</h2>
+    <p class="subtitle">Usa i marker ufficiali di AR.js — nessun file da caricare</p>
+
+    <div class="marker-guide">
+      <div class="mg-row">
+        <div class="mg-icon">🍾</div>
+        <div>
+          <div class="mg-name">Champagne AOC</div>
+          <div class="mg-marker">→ Marker HIRO</div>
+        </div>
+      </div>
+      <div class="mg-row">
+        <div class="mg-icon">🌾</div>
+        <div>
+          <div class="mg-name">Blé de Champagne</div>
+          <div class="mg-marker">→ Marker KANJI</div>
+        </div>
+      </div>
+      <div class="mg-row">
+        <div class="mg-icon">🧀</div>
+        <div>
+          <div class="mg-name">Chaource AOP</div>
+          <div class="mg-marker">→ Marker LETTERB</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Link diretti ai marker ufficiali -->
+    <div class="dl-links">
+      <a class="dl-link" href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" target="_blank">⬇ Hiro</a>
+      <a class="dl-link" href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/kanji.png" target="_blank">⬇ Kanji</a>
+      <a class="dl-link" href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/letterB.png" target="_blank">⬇ LetterB</a>
+    </div>
+
+    <div class="tip-box">
+      <strong>Consigli per il riconoscimento:</strong><br>
+      • Stampa su carta bianca, formato A5 o A4<br>
+      • Tieni il foglio su superficie piana<br>
+      • Distanza fotocamera: 20–50 cm<br>
+      • Buona illuminazione, evita riflessi<br>
+      • Tieni fermo sia il telefono che il marker
+    </div>
+
+    <button class="start-btn" onclick="startAR()">▶ Avvia fotocamera AR</button>
   </div>
 </div>
 
-<!-- ═══ UI OVERLAY ═══ -->
+<!-- ════ UI OVERLAY ════ -->
 <div id="ui-overlay">
   <div id="top-bar">
     <h1>Champagne &amp; <em>Territoire</em></h1>
     <a href="index.html" id="back-btn">← Indietro</a>
   </div>
+
+  <div id="status-badge">Cerca un marker...</div>
 
   <div id="crosshair">
     <div class="corner tl"></div>
@@ -237,179 +199,109 @@
 
   <div id="bottom-bar">
     <div class="scan-hint">
-      <div class="scan-dot"></div>
-      Cerca un marker stampato da inquadrare
+      <div class="scan-dot" id="scan-dot"></div>
+      <span id="scan-text">Punta la fotocamera su un marker stampato</span>
     </div>
     <div class="markers-list">
-      <span class="marker-tag">🍾 Champagne — Hiro</span>
-      <span class="marker-tag">🌾 Blé — Marker A</span>
-      <span class="marker-tag">🧀 Chaource — Marker B</span>
+      <span class="marker-tag">🍾 Hiro → Champagne</span>
+      <span class="marker-tag">🌾 Kanji → Blé</span>
+      <span class="marker-tag">🧀 LetterB → Chaource</span>
     </div>
   </div>
 </div>
 
-<!-- ═══ A-FRAME AR SCENE ═══ -->
+<!-- ════ SCENA A-FRAME AR ════ -->
 <a-scene
-  id="arscene"
   embedded
-  arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
-  renderer="logarithmicDepthBuffer: true; antialias: true;"
-  vr-mode-ui="enabled: false">
+  arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono;"
+  renderer="logarithmicDepthBuffer: true;"
+  vr-mode-ui="enabled: false"
+  loading-screen="dotsColor: #d4a017; backgroundColor: #0a0a0a">
 
-  <!-- ───── MARKER 1: Hiro → Champagne AOC ───── -->
-  <a-marker preset="hiro" id="marker-champagne">
-    <!-- Bottiglia stilizzata -->
-    <a-cylinder
-      position="0 0.6 0"
-      radius="0.12" height="1.1"
-      color="#2d5a1b"
-      shadow>
-    </a-cylinder>
-    <a-sphere
-      position="0 1.2 0"
-      radius="0.09"
-      color="#2d5a1b"
-      shadow>
-    </a-sphere>
-    <a-cylinder
-      position="0 1.3 0"
-      radius="0.04" height="0.15"
-      color="#c0c0c0">
-    </a-cylinder>
-    <!-- Etichetta dorata -->
-    <a-plane
-      position="0 0.65 0.13"
-      width="0.22" height="0.28"
-      color="#d4a017"
-      rotation="0 0 0">
-    </a-plane>
-    <!-- Testo principale -->
+  <a-assets>
+    <a-mixin id="spin"
+      animation="property: rotation; to: 0 360 0; loop: true; dur: 9000; easing: linear;">
+    </a-mixin>
+  </a-assets>
+
+  <!-- ══ MARKER HIRO → Champagne AOC ══ -->
+  <a-marker preset="hiro" id="m-champagne">
+
+    <a-entity mixin="spin">
+      <!-- Corpo bottiglia -->
+      <a-cylinder position="0 0.55 0" radius="0.13" height="1.0" color="#1a4010"></a-cylinder>
+      <!-- Spalla -->
+      <a-sphere position="0 1.1 0" radius="0.1" color="#1a4010"></a-sphere>
+      <!-- Collo -->
+      <a-cylinder position="0 1.28 0" radius="0.045" height="0.32" color="#1a4010"></a-cylinder>
+      <!-- Tappo dorato -->
+      <a-cylinder position="0 1.47 0" radius="0.055" height="0.06" color="#c8a800"></a-cylinder>
+      <!-- Etichetta -->
+      <a-plane position="0 0.58 0.14" width="0.24" height="0.28" color="#f5e6b4"></a-plane>
+      <a-text value="AOC" position="0 0.58 0.145" align="center" color="#8b0000" width="0.8"></a-text>
+    </a-entity>
+
+    <a-text value="CHAMPAGNE AOC" position="0 1.9 0" align="center" color="#f5f0e8" width="2.8"></a-text>
     <a-text
-      value="CHAMPAGNE AOC"
-      position="0 1.8 0"
-      align="center"
-      color="#f5f0e8"
-      width="2.5"
-      font="https://cdn.aframe.io/fonts/Exo2Bold.fnt">
+      value="Export: 4,9 Mld euro/anno&#10;Vigneti: 34.000 ettari&#10;Viticoltori: 16.000"
+      position="0 1.4 0" align="center" color="#d4a017" width="2.2">
     </a-text>
-    <!-- Info economiche -->
-    <a-text
-      value="Export: 4,9 Miliardi €\n34.000 ha di vigneti\n16.000 viticoltori"
-      position="0 1.3 0"
-      align="center"
-      color="#d4a017"
-      width="2"
-      font="https://cdn.aframe.io/fonts/Exo2Bold.fnt">
-    </a-text>
-    <!-- Etichetta tipo prodotto -->
-    <a-text
-      value="DENOMINAZIONE DI ORIGINE\nCONTROLLATA — AOC"
-      position="0 0.15 0"
-      align="center"
-      color="#a09070"
-      width="1.8">
-    </a-text>
-    <!-- Animazione rotazione -->
-    <a-animation
-      attribute="rotation"
-      to="0 360 0"
-      dur="10000"
-      easing="linear"
-      repeat="indefinite">
-    </a-animation>
+    <a-text value="Appellation d'Origine Controlee" position="0 -0.12 0" align="center" color="#777" width="1.8"></a-text>
+
   </a-marker>
 
-  <!-- ───── MARKER 2: Custom Pattern A → Blé ───── -->
-  <!-- Nota: in produzione, usare a-marker type="pattern" url="markers/marker-ble.patt" -->
-  <a-marker type="barcode" value="1" id="marker-ble">
-    <!-- Spiga di grano stilizzata -->
-    <a-cylinder
-      position="0 0.4 0"
-      radius="0.03" height="0.8"
-      color="#c8a84b">
-    </a-cylinder>
-    <!-- Chicchi -->
-    <a-sphere position="0.06 0.65 0" radius="0.06" color="#e8c85a"></a-sphere>
-    <a-sphere position="-0.06 0.7 0" radius="0.06" color="#e8c85a"></a-sphere>
-    <a-sphere position="0.06 0.78 0" radius="0.05" color="#e8c85a"></a-sphere>
-    <a-sphere position="-0.06 0.82 0" radius="0.05" color="#e8c85a"></a-sphere>
-    <a-sphere position="0 0.88 0" radius="0.05" color="#e8c85a"></a-sphere>
+  <!-- ══ MARKER KANJI → Blé de Champagne ══ -->
+  <a-marker preset="kanji" id="m-ble">
 
+    <a-entity mixin="spin">
+      <!-- Stelo -->
+      <a-cylinder position="0 0.45 0" radius="0.025" height="0.9" color="#8b7035"></a-cylinder>
+      <!-- Chicchi -->
+      <a-sphere position=" 0.07 0.68 0" radius="0.065" color="#e8c84a"></a-sphere>
+      <a-sphere position="-0.07 0.74 0" radius="0.065" color="#e8c84a"></a-sphere>
+      <a-sphere position=" 0.07 0.80 0" radius="0.055" color="#dfc040"></a-sphere>
+      <a-sphere position="-0.07 0.85 0" radius="0.055" color="#dfc040"></a-sphere>
+      <a-sphere position=" 0.03 0.90 0" radius="0.045" color="#d4b838"></a-sphere>
+      <a-sphere position="-0.03 0.95 0" radius="0.04"  color="#cab030"></a-sphere>
+      <!-- Foglie -->
+      <a-plane position=" 0.13 0.3 0" width="0.2" height="0.055" color="#5a8a2a" rotation="0 0 -30"></a-plane>
+      <a-plane position="-0.13 0.45 0" width="0.2" height="0.055" color="#5a8a2a" rotation="0 0 30"></a-plane>
+    </a-entity>
+
+    <a-text value="BLE DE CHAMPAGNE" position="0 1.6 0" align="center" color="#f5f0e8" width="2.8"></a-text>
     <a-text
-      value="BLÉ DE CHAMPAGNE"
-      position="0 1.5 0"
-      align="center"
-      color="#f5f0e8"
-      width="2.5"
-      font="https://cdn.aframe.io/fonts/Exo2Bold.fnt">
+      value="1° in Francia per resa&#10;650.000 tonnellate/anno&#10;Champagne Crayeuse"
+      position="0 1.15 0" align="center" color="#d4a017" width="2.2">
     </a-text>
-    <a-text
-      value="1° in Francia per resa\n650.000 t/anno\nChampagne Crayeuse"
-      position="0 1.0 0"
-      align="center"
-      color="#d4a017"
-      width="2">
-    </a-text>
-    <a-animation
-      attribute="rotation"
-      to="0 360 0"
-      dur="12000"
-      easing="linear"
-      repeat="indefinite">
-    </a-animation>
+    <a-text value="Pianura tra le piu fertili d'Europa" position="0 -0.12 0" align="center" color="#777" width="1.8"></a-text>
+
   </a-marker>
 
-  <!-- ───── MARKER 3: Custom Pattern B → Chaource ───── -->
-  <a-marker type="barcode" value="2" id="marker-fromage">
-    <!-- Forma rotonda del formaggio -->
-    <a-cylinder
-      position="0 0.12 0"
-      radius="0.35" height="0.24"
-      color="#f5e6c8"
-      shadow>
-    </a-cylinder>
-    <!-- Crosta -->
-    <a-torus
-      position="0 0.12 0"
-      radius="0.35"
-      radius-tubular="0.03"
-      color="#d4c09a">
-    </a-torus>
-    <!-- Fetta tagliata -->
-    <a-cylinder
-      position="0.2 0.12 0.2"
-      radius="0.15" height="0.24"
-      color="#f0d9a0"
-      rotation="0 45 0"
-      shadow>
-    </a-cylinder>
+  <!-- ══ MARKER LETTERB → Chaource AOP ══ -->
+  <a-marker preset="letterB" id="m-fromage">
 
+    <a-entity mixin="spin">
+      <!-- Disco formaggio -->
+      <a-cylinder position="0 0.13 0" radius="0.38" height="0.26" color="#f0e0b0"></a-cylinder>
+      <!-- Crosta superiore -->
+      <a-cylinder position="0 0.265 0" radius="0.382" height="0.028" color="#d8c8a0"></a-cylinder>
+      <!-- Bordo crosta -->
+      <a-torus position="0 0.13 0" radius="0.38" radius-tubular="0.024" color="#c8a870"></a-torus>
+      <!-- Fetta -->
+      <a-cylinder position="0.45 0.13 0" radius="0.16" height="0.26" color="#f5e8c0" rotation="0 0 0"></a-cylinder>
+    </a-entity>
+
+    <a-text value="CHAOURCE AOP" position="0 1.1 0" align="center" color="#f5f0e8" width="2.8"></a-text>
     <a-text
-      value="CHAOURCE AOP"
-      position="0 1.2 0"
-      align="center"
-      color="#f5f0e8"
-      width="2.5"
-      font="https://cdn.aframe.io/fonts/Exo2Bold.fnt">
+      value="Produzione: ~800 t/anno&#10;Denominazione europea AOP&#10;Tradizione dal XIV secolo"
+      position="0 0.65 0" align="center" color="#d4a017" width="2.2">
     </a-text>
-    <a-text
-      value="~800 t/anno\nDenominazione Europea AOP\nTradizione dal XIV secolo"
-      position="0 0.7 0"
-      align="center"
-      color="#d4a017"
-      width="2">
-    </a-text>
-    <a-animation
-      attribute="rotation"
-      to="0 360 0"
-      dur="11000"
-      easing="linear"
-      repeat="indefinite">
-    </a-animation>
+    <a-text value="Pasta molle - crosta fiorita" position="0 -0.12 0" align="center" color="#777" width="1.8"></a-text>
+
   </a-marker>
 
-  <!-- Camera -->
   <a-entity camera></a-entity>
+
 </a-scene>
 
 <script>
@@ -417,19 +309,32 @@
     document.getElementById('instructions').classList.add('hidden');
   }
 
-  // Show marker detection feedback
-  document.querySelectorAll('a-marker').forEach(marker => {
-    marker.addEventListener('markerFound', () => {
-      const dot = document.querySelector('.scan-dot');
-      dot.style.background = '#00ff88';
-      dot.style.boxShadow = '0 0 8px #00ff88';
-      document.querySelector('.scan-hint span:last-child').textContent = 'Marker rilevato! ✓';
+  const dot   = document.getElementById('scan-dot');
+  const txt   = document.getElementById('scan-text');
+  const badge = document.querySelector('#status-badge');
+
+  const labels = {
+    'm-champagne': '🍾 Champagne AOC rilevato!',
+    'm-ble':       '🌾 Blé de Champagne rilevato!',
+    'm-fromage':   '🧀 Chaource AOP rilevato!'
+  };
+
+  document.querySelectorAll('a-marker').forEach(m => {
+    m.addEventListener('markerFound', () => {
+      dot.style.background = '#00e87a';
+      dot.style.boxShadow  = '0 0 10px #00e87a';
+      txt.textContent   = labels[m.id] || 'Marker rilevato ✓';
+      badge.textContent = '✓ ' + (labels[m.id] || 'Rilevato');
+      badge.style.color = '#00e87a';
+      badge.style.borderColor = 'rgba(0,232,122,0.45)';
     });
-    marker.addEventListener('markerLost', () => {
-      const dot = document.querySelector('.scan-dot');
+    m.addEventListener('markerLost', () => {
       dot.style.background = '#d4a017';
-      dot.style.boxShadow = 'none';
-      document.querySelector('.scan-hint span:last-child').textContent = 'Cerca un marker stampato da inquadrare';
+      dot.style.boxShadow  = 'none';
+      txt.textContent   = 'Punta la fotocamera su un marker stampato';
+      badge.textContent = 'Cerca un marker...';
+      badge.style.color = '#d4a017';
+      badge.style.borderColor = 'rgba(184,134,11,0.3)';
     });
   });
 </script>
