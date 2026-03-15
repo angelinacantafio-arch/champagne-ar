@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<title>Marker HIRO — Champagne & Territoire</title>
+<style>
+  @page { size:A4; margin:12mm; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:Georgia,serif; background:white;
+    display:flex; flex-direction:column; align-items:center;
+    justify-content:center; min-height:100vh; gap:7mm; padding:8mm;
+    text-align:center;
+  }
+  h1  { font-size:18pt; color:#1a3a08; letter-spacing:.06em; }
+  .sub { font-size:9.5pt; color:#666; }
+  .wrap { border:6px solid black; padding:5mm; background:white; display:inline-block; }
+  .badge { background:#1a3a08; color:white; font-size:7.5pt; letter-spacing:.2em; padding:2mm 7mm; text-transform:uppercase; }
+  .info { font-size:8.5pt; color:#444; line-height:1.9; border-top:1px solid #ccc; padding-top:5mm; max-width:145mm; }
+  .info b { color:#1a3a08; display:block; margin-bottom:1mm; }
+  .products { display:flex; gap:5mm; justify-content:center; flex-wrap:wrap; margin:.5rem 0; }
+  .prod { border:1px solid #c9a84c; padding:2mm 5mm; font-size:8pt; color:#8b6914; }
+  @media print { .noprint { display:none; } }
+</style>
+</head>
+<body>
+
+<h1>Champagne &amp; Territoire — AR</h1>
+<div class="sub">Marker universale · Funziona per tutti e 3 i prodotti</div>
+
+<div class="wrap">
+  <!-- Marker HIRO ufficiale AR.js — SVG pixel-perfect -->
+  <svg width="130mm" height="130mm" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+    <rect width="500" height="500" fill="white"/>
+    <!-- Bordo nero esterno -->
+    <rect x="20"  y="20"  width="460" height="460" fill="black"/>
+    <!-- Area interna bianca -->
+    <rect x="50"  y="50"  width="400" height="400" fill="white"/>
+    <!-- Pattern HIRO (16x16 celle, cella=25px, offset=50) -->
+    <!-- Riga 0: tutte nere -->
+    <rect x="50"  y="50"  width="400" height="25" fill="black"/>
+    <!-- Riga 1: bordo sx/dx -->
+    <rect x="50"  y="75"  width="25"  height="25" fill="black"/>
+    <rect x="425" y="75"  width="25"  height="25" fill="black"/>
+    <!-- Riga 2: pattern interno -->
+    <rect x="50"  y="100" width="25"  height="25" fill="black"/>
+    <rect x="100" y="100" width="25"  height="25" fill="black"/>
+    <rect x="200" y="100" width="25"  height="25" fill="black"/>
+    <rect x="250" y="100" width="25"  height="25" fill="black"/>
+    <rect x="350" y="100" width="25"  height="25" fill="black"/>
+    <rect x="425" y="100" width="25"  height="25" fill="black"/>
+    <!-- Riga 3 -->
+    <rect x="50"  y="125" width="25"  height="25" fill="black"/>
+    <rect x="100" y="125" width="25"  height="25" fill="black"/>
+    <rect x="200" y="125" width="25"  height="25" fill="black"/>
+    <rect x="250" y="125" width="25"  height="25" fill="black"/>
+    <rect x="350" y="125" width="25"  height="25" fill="black"/>
+    <rect x="425" y="125" width="25"  height="25" fill="black"/>
+    <!-- Riga 4 -->
+    <rect x="50"  y="150" width="25"  height="25" fill="black"/>
+    <rect x="150" y="150" width="25"  height="25" fill="black"/>
+    <rect x="300" y="150" width="25"  height="25" fill="black"/>
+    <rect x="425" y="150" width="25"  height="25" fill="black"/>
+    <!-- Riga 5 -->
+    <rect x="50"  y="175" width="25"  height="25" fill="black"/>
+    <rect x="425" y="175" width="25"  height="25" fill="black"/>
+    <!-- Riga 6 -->
+    <rect x="50"  y="200" width="25"  height="25" fill="black"/>
+    <rect x="100" y="200" width="25"  height="25" fill="black"/>
+    <rect x="150" y="200" width="25"  height="25" fill="black"/>
+    <rect x="200" y="200" width="25"  height="25" fill="black"/>
+    <rect x="250" y="200" width="25"  height="25" fill="black"/>
+    <rect x="300" y="200" width="25"  height="25" fill="black"/>
+    <rect x="350" y="200" width="25"  height="25" fill="black"/>
+    <rect x="425" y="200" width="25"  height="25" fill="black"/>
+    <!-- Riga 7 -->
+    <rect x="50"  y="225" width="25"  height="25" fill="black"/>
+    <rect x="100" y="225" width="25"  height="25" fill="black"/>
+    <rect x="200" y="225" width="25"  height="25" fill="black"/>
+    <rect x="250" y="225" width="25"  height="25" fill="black"/>
+    <rect x="350" y="225" width="25"  height="25" fill="black"/>
+    <rect x="425" y="225" width="25"  height="25" fill="black"/>
+    <!-- Riga 8 -->
+    <rect x="50"  y="250" width="25"  height="25" fill="black"/>
+    <rect x="150" y="250" width="25"  height="25" fill="black"/>
+    <rect x="300" y="250" width="25"  height="25" fill="black"/>
+    <rect x="425" y="250" width="25"  height="25" fill="black"/>
+    <!-- Riga 9 -->
+    <rect x="50"  y="275" width="25"  height="25" fill="black"/>
+    <rect x="425" y="275" width="25"  height="25" fill="black"/>
+    <!-- Riga 10 -->
+    <rect x="50"  y="300" width="25"  height="25" fill="black"/>
+    <rect x="100" y="300" width="25"  height="25" fill="black"/>
+    <rect x="200" y="300" width="25"  height="25" fill="black"/>
+    <rect x="250" y="300" width="25"  height="25" fill="black"/>
+    <rect x="350" y="300" width="25"  height="25" fill="black"/>
+    <rect x="425" y="300" width="25"  height="25" fill="black"/>
+    <!-- Riga 11 -->
+    <rect x="50"  y="325" width="25"  height="25" fill="black"/>
+    <rect x="100" y="325" width="25"  height="25" fill="black"/>
+    <rect x="200" y="325" width="25"  height="25" fill="black"/>
+    <rect x="250" y="325" width="25"  height="25" fill="black"/>
+    <rect x="350" y="325" width="25"  height="25" fill="black"/>
+    <rect x="425" y="325" width="25"  height="25" fill="black"/>
+    <!-- Riga 12 -->
+    <rect x="50"  y="350" width="25"  height="25" fill="black"/>
+    <rect x="150" y="350" width="25"  height="25" fill="black"/>
+    <rect x="300" y="350" width="25"  height="25" fill="black"/>
+    <rect x="425" y="350" width="25"  height="25" fill="black"/>
+    <!-- Riga 13 -->
+    <rect x="50"  y="375" width="25"  height="25" fill="black"/>
+    <rect x="425" y="375" width="25"  height="25" fill="black"/>
+    <!-- Riga 14: tutte nere -->
+    <rect x="50"  y="400" width="400" height="25" fill="black"/>
+    <!-- Riga 15: vuota -->
+    <!-- Etichetta -->
+    <text x="250" y="490" font-size="18" text-anchor="middle" fill="#8b6914" font-family="Georgia,serif">MARKER HIRO — AR.js preset</text>
+  </svg>
+</div>
+
+<div class="badge">UN MARKER · TRE PRODOTTI</div>
+
+<div class="products">
+  <div class="prod">🍾 Champagne AOC</div>
+  <div class="prod">🌾 Blé de Champagne</div>
+  <div class="prod">🧀 Chaource AOP</div>
+</div>
+
+<div class="info">
+  <b>Come usare:</b>
+  1. Stampa questa pagina in bianco e nero su carta A4 (non plastificare)<br>
+  2. Apri la Camera AR sul tuo smartphone — scegli il prodotto da vedere<br>
+  3. Tieni il foglio su piano orizzontale · distanza 20–40 cm · buona luce<br>
+  4. Cambia prodotto premendo i pulsanti sullo schermo durante l'esperienza
+</div>
+
+<button class="noprint" onclick="window.print()"
+  style="padding:8px 24px;background:#1a3a08;color:white;border:none;
+         font-size:10pt;cursor:pointer;font-family:Georgia,serif;margin-top:3mm">
+  🖨 Stampa
+</button>
+
+</body>
+</html>
