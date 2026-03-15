@@ -158,7 +158,7 @@
     <div class="card" onclick="openMarker('ble')">
       <span class="card-ar">AR</span>
       <div class="card-icon">🌾</div>
-      <div class="card-tag">Agricoltura · Stesso marker</div>
+      <div class="card-tag">Agricoltura · Stesso marker Hiro</div>
       <h3>Blé de Champagne</h3>
       <p>La pianura cretacea è tra le più fertili d'Europa. Primo dipartimento francese per resa cerealicola.</p>
       <div class="card-stats">
@@ -170,7 +170,7 @@
     <div class="card" onclick="openMarker('chaource')">
       <span class="card-ar">AR</span>
       <div class="card-icon">🧀</div>
-      <div class="card-tag">Lattiero-caseario · Stesso marker</div>
+      <div class="card-tag">Lattiero-caseario · Stesso marker Hiro</div>
       <h3>Chaource AOP</h3>
       <p>Formaggio a pasta molle con crosta fiorita, tradizione dal XIV secolo, denominazione europea AOP.</p>
       <div class="card-stats">
@@ -280,33 +280,20 @@ const HIRO_SVG = `
 <rect x="128" y="158" width="10" height="10" fill="black"/>
 <rect x="168" y="158" width="10" height="10" fill="black"/>`;
 
-const prodotti = {
-  champagne: {
-    title: 'Marker — Champagne AOC',
-    desc:  'Stampa questo marker. Nell\'app AR seleziona 🍾 Champagne e punta la fotocamera sul foglio.',
-    label: '🍾 CHAMPAGNE AOC'
-  },
-  ble: {
-    title: 'Marker — Blé de Champagne',
-    desc:  'Stampa questo marker. Nell\'app AR seleziona 🌾 Blé e punta la fotocamera sul foglio.',
-    label: '🌾 BLÉ DE CHAMPAGNE'
-  },
-  chaource: {
-    title: 'Marker — Chaource AOP',
-    desc:  'Stampa questo marker. Nell\'app AR seleziona 🧀 Chaource e punta la fotocamera sul foglio.',
-    label: '🧀 CHAOURCE AOP'
-  }
+const nomi = {
+  champagne: '🍾 Champagne AOC',
+  ble:       '🌾 Blé de Champagne',
+  chaource:  '🧀 Chaource AOP'
 };
 
-let currentProdotto = 'champagne';
-
 function openMarker(key) {
-  currentProdotto = key;
-  const p = prodotti[key];
-  document.getElementById('modal-title').textContent = p.title;
-  document.getElementById('modal-desc').textContent  = p.desc;
-  document.getElementById('modal-svg').innerHTML     = HIRO_SVG +
-    `<text x="100" y="196" font-size="9" text-anchor="middle" fill="#8b6914" font-family="Georgia,serif">${p.label}</text>`;
+  const nome = nomi[key];
+  document.getElementById('modal-title').textContent = 'Marker — ' + nome;
+  document.getElementById('modal-desc').textContent  =
+    'C\'è un solo marker per tutti i prodotti. ' +
+    'Stampalo, poi nell\'app AR seleziona ' + nome + ' con i pulsanti sullo schermo.';
+  document.getElementById('modal-svg').innerHTML = HIRO_SVG +
+    `<text x="100" y="196" font-size="8" text-anchor="middle" fill="#8b6914" font-family="Georgia,serif">UN MARKER · TRE PRODOTTI</text>`;
   document.getElementById('modal').classList.add('open');
 }
 
@@ -315,38 +302,8 @@ function closeModal() {
 }
 
 function stampaMarker() {
-  const p = prodotti[currentProdotto];
-  const w = window.open('', '_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/>
-  <title>Marker AR — ${p.label}</title>
-  <style>
-    @page{size:A4;margin:15mm}
-    body{font-family:Georgia,serif;background:white;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:6mm;text-align:center}
-    h1{font-size:18pt;color:#1a3a08}
-    .sub{font-size:9pt;color:#666}
-    .wrap{border:5px solid black;padding:5mm;background:white}
-    .badge{background:#1a3a08;color:white;font-size:7pt;letter-spacing:.2em;padding:1.5mm 6mm;text-transform:uppercase}
-    .info{font-size:8pt;color:#444;line-height:1.9;border-top:1px solid #ccc;padding-top:4mm;max-width:140mm}
-    .info b{color:#1a3a08}
-    @media print{.noprint{display:none}}
-  </style></head><body>
-  <h1>${p.label}</h1>
-  <div class="sub">Marker AR — Hiro preset · Inquadra con la fotocamera</div>
-  <div class="wrap">
-    <svg width="130mm" height="130mm" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      ${HIRO_SVG}
-    </svg>
-  </div>
-  <div class="badge">MARKER HIRO — AR.js</div>
-  <div class="info">
-    <b>Istruzioni:</b><br>
-    1. Stampa in bianco e nero su carta A4 (non plastificare)<br>
-    2. Nell'app AR premi il pulsante del prodotto: ${p.label}<br>
-    3. Tieni il foglio fermo su piano orizzontale · distanza 20–40 cm · buona luce
-  </div>
-  <button class="noprint" onclick="window.print()" style="padding:8px 24px;background:#1a3a08;color:white;border:none;font-size:11pt;cursor:pointer;font-family:Georgia,serif;margin-top:4mm">🖨 Stampa</button>
-  </body></html>`);
-  w.document.close();
+  // Apre la pagina marker ufficiale con il PNG corretto
+  window.open('markers/marker-hiro.html', '_blank');
 }
 </script>
 </body>
