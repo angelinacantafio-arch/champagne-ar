@@ -66,7 +66,7 @@
       position:relative;
     }
     .card:hover { border-color:rgba(201,168,76,.4); }
-    .card-ar { position:absolute; top:1rem; right:1rem; font-size:.58rem; letter-spacing:.15em; color:var(--gold); border:1px solid rgba(201,168,76,.3); padding:.2rem .5rem; }
+    .card-ar   { position:absolute; top:1rem; right:1rem; font-size:.58rem; letter-spacing:.15em; color:var(--gold); border:1px solid rgba(201,168,76,.3); padding:.2rem .5rem; }
     .card-icon { font-size:2rem; margin-bottom:.8rem; }
     .card-tag  { font-size:.6rem; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; margin-bottom:.6rem; }
     .card h3   { font-size:1.15rem; font-weight:400; margin-bottom:.6rem; }
@@ -75,16 +75,16 @@
     .stat-val { display:block; font-size:1.1rem; color:var(--gold); font-style:italic; }
     .stat-lbl { font-size:.6rem; letter-spacing:.15em; text-transform:uppercase; color:#3a3020; }
 
-    /* MARKER MODAL */
+    /* MODAL */
     #modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:200; align-items:center; justify-content:center; padding:1.5rem; }
     #modal.open { display:flex; }
-    .modal-box { background:#0f0c06; border:1px solid rgba(201,168,76,.4); padding:2rem; max-width:420px; width:100%; text-align:center; }
-    .modal-box h2 { font-size:1.1rem; font-weight:400; margin-bottom:.3rem; }
-    .modal-box p  { font-size:.78rem; color:var(--muted); margin-bottom:1.2rem; line-height:1.6; }
-    .marker-img-wrap { border:5px solid #000; background:#fff; display:inline-block; padding:4px; margin-bottom:1rem; }
+    .modal-box { background:#0f0c06; border:1px solid rgba(201,168,76,.4); padding:2rem; max-width:400px; width:100%; text-align:center; }
+    .modal-box h2 { font-size:1.1rem; font-weight:400; margin-bottom:.5rem; color:var(--text); }
+    .modal-box p  { font-size:.8rem; color:var(--muted); margin-bottom:1.5rem; line-height:1.7; }
     .modal-btns { display:flex; gap:.8rem; justify-content:center; flex-wrap:wrap; }
-    .modal-btn-print { background:var(--gold); color:#000; border:none; padding:.7rem 1.5rem; font-family:Georgia,serif; font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; cursor:pointer; }
-    .modal-btn-close { border:1px solid rgba(201,168,76,.3); color:var(--gold); background:none; padding:.7rem 1.5rem; font-family:Georgia,serif; font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; cursor:pointer; }
+    .modal-btn-stamp { background:var(--gold); color:#000; border:none; padding:.7rem 1.5rem; font-family:Georgia,serif; font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; cursor:pointer; text-decoration:none; display:inline-block; }
+    .modal-btn-ar    { border:1px solid rgba(201,168,76,.4); color:var(--gold); background:none; padding:.7rem 1.5rem; font-family:Georgia,serif; font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; cursor:pointer; text-decoration:none; display:inline-block; }
+    .modal-btn-close { border:none; background:none; color:var(--muted); font-size:.75rem; cursor:pointer; margin-top:.5rem; font-family:Georgia,serif; text-decoration:underline; }
 
     /* FOOTER */
     footer { border-top:1px solid rgba(201,168,76,.1); padding:3rem 1.5rem; text-align:center; }
@@ -93,11 +93,15 @@
     .school span   { font-size:.72rem; color:var(--muted); }
     .footer-copy   { font-size:.65rem; color:#2a2010; letter-spacing:.1em; }
 
-    @media(max-width:600px) { .hero-btns { flex-direction:column; align-items:center; } }
+    @media(max-width:600px) {
+      .hero-btns { flex-direction:column; align-items:center; }
+      .modal-btns { flex-direction:column; }
+    }
   </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <div class="nav-logo">Champagne &amp; Territoire · Erasmus+ 2026</div>
   <a href="ar-camera.html" class="nav-cta">📷 Apri AR</a>
@@ -105,7 +109,7 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-label">IIS Vibo Valentia · Châlons-en-Champagne · 2026</div>
+  <div class="hero-label">IIS ITG - ITI - ITE · Vibo Valentia · Châlons-en-Champagne · 2026</div>
   <h1>Champagne<br>&amp; <em>Territoire</em></h1>
   <p class="hero-sub">Guida turistica interattiva in realtà aumentata sui prodotti tipici della Marne. Progetto Erasmus+ franco-italiano.</p>
   <div class="hero-btns">
@@ -143,7 +147,7 @@
   <div class="section-title">Il territorio in tre eccellenze</div>
   <div class="prodotti">
 
-    <div class="card" onclick="openMarker('champagne')">
+    <div class="card" onclick="openModal('champagne')">
       <span class="card-ar">AR</span>
       <div class="card-icon">🍾</div>
       <div class="card-tag">Enologia · Marker Hiro</div>
@@ -155,10 +159,10 @@
       </div>
     </div>
 
-    <div class="card" onclick="openMarker('ble')">
+    <div class="card" onclick="openModal('ble')">
       <span class="card-ar">AR</span>
       <div class="card-icon">🌾</div>
-      <div class="card-tag">Agricoltura · Stesso marker Hiro</div>
+      <div class="card-tag">Agricoltura · Marker Kanji</div>
       <h3>Blé de Champagne</h3>
       <p>La pianura cretacea è tra le più fertili d'Europa. Primo dipartimento francese per resa cerealicola.</p>
       <div class="card-stats">
@@ -167,10 +171,10 @@
       </div>
     </div>
 
-    <div class="card" onclick="openMarker('chaource')">
-      <span class="card-ar">AR</span>
+    <div class="card" onclick="openModal('chaource')">
+      <span class="card-ar">INFO</span>
       <div class="card-icon">🧀</div>
-      <div class="card-tag">Lattiero-caseario · Stesso marker Hiro</div>
+      <div class="card-tag">Lattiero-caseario · Scheda</div>
       <h3>Chaource AOP</h3>
       <p>Formaggio a pasta molle con crosta fiorita, tradizione dal XIV secolo, denominazione europea AOP.</p>
       <div class="card-stats">
@@ -183,128 +187,81 @@
 </section>
 
 <!-- AR CTA -->
-<section style="text-align:center;padding:3rem 1.5rem;">
-  <a href="ar-camera.html" class="btn-primary" style="font-size:1rem;padding:1.1rem 3rem;">
+<section style="text-align:center; padding:3rem 1.5rem;">
+  <a href="ar-camera.html" class="btn-primary" style="font-size:1rem; padding:1.1rem 3rem;">
     📷 Avvia la Camera AR
   </a>
-  <p style="margin-top:1rem;font-size:.75rem;color:var(--muted)">
-    Richiede fotocamera e HTTPS · Usa Chrome (Android) o Safari (iPhone)
+  <p style="margin-top:1rem; font-size:.75rem; color:var(--muted);">
+    Richiede fotocamera e HTTPS · Chrome (Android) o Safari (iPhone)
   </p>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-schools">
-    <div class="school"><strong>IIS ITG - ITI - ITE</strong><span>Vibo Valentia, Calabria, Italia</span></div>
-    <div style="color:var(--gold);font-size:1.2rem;align-self:center;">✦</div>
-    <div class="school"><strong>École Partenaire</strong><span>Châlons-en-Champagne, France</span></div>
+    <div class="school">
+      <strong>IIS ITG - ITI - ITE</strong>
+      <span>Vibo Valentia, Calabria, Italia</span>
+    </div>
+    <div style="color:var(--gold); font-size:1.2rem; align-self:center;">✦</div>
+    <div class="school">
+      <strong>École Partenaire</strong>
+      <span>Châlons-en-Champagne, France</span>
+    </div>
   </div>
   <p class="footer-copy">Progetto Erasmus+ · Studenti italiani e francesi · 2026</p>
 </footer>
 
-<!-- MODAL MARKER STAMPABILE -->
+<!-- MODAL -->
 <div id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-box">
-    <h2 id="modal-title">Marker AR</h2>
+    <h2 id="modal-title"></h2>
     <p id="modal-desc"></p>
-    <div class="marker-img-wrap">
-      <svg id="modal-svg" width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="modal-btns">
+      <a id="modal-marker-link" href="#" target="_blank" class="modal-btn-stamp">🖨 Stampa marker</a>
+      <a href="ar-camera.html" class="modal-btn-ar">📷 Apri AR</a>
     </div>
     <br>
-    <div class="modal-btns">
-      <button class="modal-btn-print" onclick="stampaMarker()">🖨 Stampa marker</button>
-      <button class="modal-btn-close" onclick="closeModal()">✕ Chiudi</button>
-    </div>
+    <button class="modal-btn-close" onclick="closeModal()">✕ Chiudi</button>
   </div>
 </div>
 
-<!-- PAGINA DI STAMPA NASCOSTA -->
-<div id="print-area" style="display:none"></div>
-
 <script>
-// SVG del marker HIRO ufficiale AR.js (pattern pixel-perfect 16x16)
-// Usato per TUTTI e 3 i prodotti — l'utente seleziona il prodotto nell'app AR
-const HIRO_SVG = `
-<rect width="200" height="200" fill="white"/>
-<rect x="8" y="8" width="184" height="184" fill="black"/>
-<rect x="20" y="20" width="160" height="160" fill="white"/>
-<rect x="28" y="28" width="10" height="10" fill="black"/>
-<rect x="48" y="28" width="10" height="10" fill="black"/>
-<rect x="88" y="28" width="10" height="10" fill="black"/>
-<rect x="108" y="28" width="10" height="10" fill="black"/>
-<rect x="148" y="28" width="10" height="10" fill="black"/>
-<rect x="28" y="38" width="10" height="10" fill="black"/>
-<rect x="68" y="38" width="10" height="10" fill="black"/>
-<rect x="128" y="38" width="10" height="10" fill="black"/>
-<rect x="168" y="38" width="10" height="10" fill="black"/>
-<rect x="28" y="48" width="10" height="10" fill="black"/>
-<rect x="48" y="48" width="10" height="10" fill="black"/>
-<rect x="88" y="48" width="10" height="10" fill="black"/>
-<rect x="108" y="48" width="10" height="10" fill="black"/>
-<rect x="148" y="48" width="10" height="10" fill="black"/>
-<rect x="28" y="68" width="10" height="10" fill="black"/>
-<rect x="48" y="68" width="10" height="10" fill="black"/>
-<rect x="88" y="68" width="10" height="10" fill="black"/>
-<rect x="108" y="68" width="10" height="10" fill="black"/>
-<rect x="148" y="68" width="10" height="10" fill="black"/>
-<rect x="28" y="78" width="10" height="10" fill="black"/>
-<rect x="68" y="78" width="10" height="10" fill="black"/>
-<rect x="128" y="78" width="10" height="10" fill="black"/>
-<rect x="168" y="78" width="10" height="10" fill="black"/>
-<rect x="28" y="88" width="10" height="10" fill="black"/>
-<rect x="48" y="88" width="10" height="10" fill="black"/>
-<rect x="88" y="88" width="10" height="10" fill="black"/>
-<rect x="108" y="88" width="10" height="10" fill="black"/>
-<rect x="148" y="88" width="10" height="10" fill="black"/>
-<rect x="28" y="108" width="10" height="10" fill="black"/>
-<rect x="48" y="108" width="10" height="10" fill="black"/>
-<rect x="88" y="108" width="10" height="10" fill="black"/>
-<rect x="108" y="108" width="10" height="10" fill="black"/>
-<rect x="148" y="108" width="10" height="10" fill="black"/>
-<rect x="28" y="118" width="10" height="10" fill="black"/>
-<rect x="68" y="118" width="10" height="10" fill="black"/>
-<rect x="128" y="118" width="10" height="10" fill="black"/>
-<rect x="168" y="118" width="10" height="10" fill="black"/>
-<rect x="28" y="128" width="10" height="10" fill="black"/>
-<rect x="48" y="128" width="10" height="10" fill="black"/>
-<rect x="88" y="128" width="10" height="10" fill="black"/>
-<rect x="108" y="128" width="10" height="10" fill="black"/>
-<rect x="148" y="128" width="10" height="10" fill="black"/>
-<rect x="28" y="148" width="10" height="10" fill="black"/>
-<rect x="48" y="148" width="10" height="10" fill="black"/>
-<rect x="88" y="148" width="10" height="10" fill="black"/>
-<rect x="108" y="148" width="10" height="10" fill="black"/>
-<rect x="148" y="148" width="10" height="10" fill="black"/>
-<rect x="28" y="158" width="10" height="10" fill="black"/>
-<rect x="68" y="158" width="10" height="10" fill="black"/>
-<rect x="128" y="158" width="10" height="10" fill="black"/>
-<rect x="168" y="158" width="10" height="10" fill="black"/>`;
+  const dati = {
+    champagne: {
+      title: '🍾 Champagne AOC',
+      desc:  'Stampa il marker Hiro, aprilo in AR e inquadralo con la fotocamera. Apparirà la bottiglia 3D con i dati economici.',
+      marker: 'markers/marker-hiro.html'
+    },
+    ble: {
+      title: '🌾 Blé de Champagne',
+      desc:  'Stampa il marker Kanji, aprilo in AR e inquadralo con la fotocamera. Apparirà la spiga di grano 3D con i dati agricoli.',
+      marker: 'markers/marker-kanji.html'
+    },
+    chaource: {
+      title: '🧀 Chaource AOP',
+      desc:  'Formaggio a pasta molle con crosta fiorita. Produzione ~800 t/anno. Denominazione europea AOP dal XIV secolo. Prodotto nei dintorni di Châlons-en-Champagne.',
+      marker: null
+    }
+  };
 
-const nomi = {
-  champagne: '🍾 Champagne AOC',
-  ble:       '🌾 Blé de Champagne',
-  chaource:  '🧀 Chaource AOP'
-};
+  function openModal(key) {
+    const d = dati[key];
+    document.getElementById('modal-title').textContent = d.title;
+    document.getElementById('modal-desc').textContent  = d.desc;
+    const link = document.getElementById('modal-marker-link');
+    if (d.marker) {
+      link.href = d.marker;
+      link.style.display = 'inline-block';
+    } else {
+      link.style.display = 'none';
+    }
+    document.getElementById('modal').classList.add('open');
+  }
 
-function openMarker(key) {
-  const nome = nomi[key];
-  document.getElementById('modal-title').textContent = 'Marker — ' + nome;
-  document.getElementById('modal-desc').textContent  =
-    'C\'è un solo marker per tutti i prodotti. ' +
-    'Stampalo, poi nell\'app AR seleziona ' + nome + ' con i pulsanti sullo schermo.';
-  document.getElementById('modal-svg').innerHTML = HIRO_SVG +
-    `<text x="100" y="196" font-size="8" text-anchor="middle" fill="#8b6914" font-family="Georgia,serif">UN MARKER · TRE PRODOTTI</text>`;
-  document.getElementById('modal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-}
-
-function stampaMarker() {
-  // Apre la pagina marker ufficiale con il PNG corretto
-  window.open('markers/marker-hiro.html', '_blank');
-}
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
 </script>
 </body>
 </html>
