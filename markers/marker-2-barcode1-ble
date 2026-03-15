@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<title>Marker BARCODE 1 — Blé de Champagne</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:210mm; height:297mm; display:flex; flex-direction:column; align-items:center; justify-content:center; background:white; font-family: Georgia, serif; }
+  .page { width:180mm; display:flex; flex-direction:column; align-items:center; gap:10mm; }
+  .title { font-size:18pt; color:#5a7a10; letter-spacing:0.1em; text-align:center; }
+  .subtitle { font-size:10pt; color:#666; text-align:center; margin-top:-6mm; }
+  .marker-wrap { border: 4mm solid black; padding:5mm; background:white; }
+  svg { display:block; }
+  .instructions { font-size:9pt; color:#555; text-align:center; line-height:1.8; border-top:1px solid #ddd; padding-top:6mm; width:100%; }
+  .instructions strong { color:#5a7a10; }
+  .badge { background:#5a7a10; color:white; font-size:8pt; letter-spacing:0.2em; padding:2mm 6mm; text-transform:uppercase; margin-top:4mm; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="title">🌾 BLÉ DE CHAMPAGNE</div>
+  <div class="subtitle">Marker AR — Inquadra con la fotocamera</div>
+
+  <!--
+    BARCODE 3x3 value=1 per AR.js
+    Encoding: value 1 in 3x3 matrix (matrixCodeType: 3x3)
+    Layout binario 3x3 del valore 1: 001 / 000 / 000
+    Con bordo obbligatorio 2 celle di padding
+  -->
+  <div class="marker-wrap">
+    <svg width="120mm" height="120mm" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
+      <rect width="700" height="700" fill="white"/>
+      <!-- Bordo nero obbligatorio (2 celle di margine) -->
+      <rect x="0" y="0" width="700" height="700" fill="black"/>
+      <rect x="100" y="100" width="500" height="500" fill="white"/>
+
+      <!-- 3x3 matrice interna, ogni cella = 100px, partendo da x=200,y=200 -->
+      <!-- Valore 1 binario 3x3: 
+           bit 8=0 bit7=0 bit6=0
+           bit 5=0 bit4=0 bit3=0
+           bit 2=0 bit1=0 bit0=1  → solo cella (2,2) nera -->
+
+      <!-- Cella 0,0 -->  <!-- bianca -->
+      <!-- Cella 1,0 -->  <!-- bianca -->
+      <!-- Cella 2,0 -->  <!-- bianca -->
+      <!-- Cella 0,1 -->  <!-- bianca -->
+      <!-- Cella 1,1 -->  <!-- bianca -->
+      <!-- Cella 2,1 -->  <!-- bianca -->
+      <!-- Cella 0,2 -->  <!-- bianca -->
+      <!-- Cella 1,2 -->  <!-- bianca -->
+      <!-- Cella 2,2 = bit0 = 1 → NERA -->
+      <rect x="400" y="400" width="100" height="100" fill="black"/>
+
+      <!-- Quadrati di orientamento agli angoli (come QR) -->
+      <!-- Alto-sinistra -->
+      <rect x="120" y="120" width="140" height="140" fill="black"/>
+      <rect x="140" y="140" width="100" height="100" fill="white"/>
+      <rect x="160" y="160" width="60"  height="60"  fill="black"/>
+      <!-- Alto-destra -->
+      <rect x="440" y="120" width="140" height="140" fill="black"/>
+      <rect x="460" y="140" width="100" height="100" fill="white"/>
+      <rect x="480" y="160" width="60"  height="60"  fill="black"/>
+      <!-- Basso-sinistra -->
+      <rect x="120" y="440" width="140" height="140" fill="black"/>
+      <rect x="140" y="460" width="100" height="100" fill="white"/>
+      <rect x="160" y="480" width="60"  height="60"  fill="black"/>
+
+      <!-- Icona centrale -->
+      <text x="310" y="340" font-size="100" text-anchor="middle" dominant-baseline="middle">🌾</text>
+    </svg>
+  </div>
+
+  <div class="badge">MARKER 2 — BARCODE 1</div>
+
+  <div class="instructions">
+    <strong>Come usare questo marker:</strong><br>
+    1. Stampa questa pagina in bianco e nero su carta A4<br>
+    2. Apri la Camera AR sul tuo smartphone<br>
+    3. Tieni il foglio su un piano orizzontale con buona illuminazione<br>
+    4. Punta la fotocamera a 20–40 cm dal marker<br>
+    5. Apparirà la spiga di grano 3D con i dati agricoli
+  </div>
+</div>
+</body>
+</html>
